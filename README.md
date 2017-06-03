@@ -8,7 +8,7 @@ Installation
 
 `gem install tileup`
 
-`tileup` requires `rmagick` for image manipulation, which depends on `imagemagick`. `imagemagick` is avaliable through `homebrew`.
+`tileup` requires `rmagick` or `mini_magick` for image manipulation, which depends on `imagemagick`. `imagemagick` is avaliable through `homebrew`.
 
 Usage
 -----
@@ -42,7 +42,7 @@ tileup --in really_huge_image.png --auto-zoom 4 \
        --output-dir map_tiles
 ```
 
-`--auto-zoom 4` means, make 4 levesl of zoom, starting from `really_huge_image.png` at zoom level 20, then scale that down for 19, etc.
+`--auto-zoom 4` means, make 4 levels of zoom, starting from `really_huge_image.png` at zoom level 20, then scale that down for 19, etc.
 
 You should see something like:
 

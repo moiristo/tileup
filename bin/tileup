@@ -3,15 +3,7 @@
 require 'tileup'
 require 'optparse'
 
-options = {
-  tile_width: 256,
-  tile_height: 256,
-  filename_prefix: "map_tile",
-  auto_zoom_levels: nil,
-  input_filename: nil,
-  output_dir: '.'
-
-}
+options = TileUp::Tiler::DEFAULT_OPTIONS.dup
 
 OptionParser.new do |o|
   o.on('--in=input_file', "Required input file, your large image to tile up.") { |input_filename| options[:input_filename] = input_filename }
@@ -20,9 +12,12 @@ OptionParser.new do |o|
   o.on('--tile-height=256', "Tile height, should normally equal tile width.") { |height| options[:tile_height] = height }
   o.on('--auto-zoom=', Integer, "Automatically scale input image N times, must be a number."){ |zooms| options[:auto_zoom_levels] = zooms }
   o.on('--output-dir=', "Output directory (will be created if it doesn't exist).") { |output_dir| options[:output_dir] = output_dir }
+  o.on('--processor=rmagick', "Image processor, should be 'rmagick' or 'mini_magick'") { |processor| options[:processor] = processor }
+  o.on('--logger=console', "Sets logger, should be 'console' or 'none'") { |logger| options[:logger] = logger }
+  o.on('--extend-color=none', "Extend color for edge tiles.") {|extend_color| options[:extend_color] = extend_color }
   o.on('--dont-extend-incomplete-tiles',
        "Do not extend edge tiles if they do not fill an entire tile_width x tile_height. " +
-       "By default tileup will extend tiles to tile_width x tile_height if required.") {|e|options[:extend_incomplete_tiles] = false}
+       "By default tileup will extend tiles to tile_width x tile_height if required.") {|e| options[:extend_incomplete_tiles] = false}
   o.on('-v', '--verbose', "Enable verbose logging.") { |verbose| options[:verbose] = true }
   o.on('-h', '--help', "You're looking at it.") { puts o; exit }
   o.on('--version', "Version information (v#{TileUp::VERSION})") { puts TileUp::VERSION; exit }
@@ -43,7 +38,7 @@ if options[:input_filename].nil?
 end
 
 begin
-  TileUp::Tiler.new(options[:input_filename], options)
+  TileUp::Tiler.new(options[:input_filename], options).make_tiles!
 rescue Interrupt
   puts "\n\nInterrupt received, exiting.\n"
   exit
