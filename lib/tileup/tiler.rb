@@ -21,7 +21,7 @@ module TileUp
 
     attr_accessor :image_processor, :image, :options, :extension, :logger
 
-    def initialize(image_filename, options)
+    def initialize image_filename, options = {}
       self.options = options = OpenStruct.new(DEFAULT_OPTIONS.merge(options))
       self.logger = TileUp::Logger.build(options.logger, :info, {verbose: options.verbose})
       self.image_processor = TileUp::ImageProcessor.build(options.processor, logger)
@@ -40,13 +40,13 @@ module TileUp
       end
     end
 
-    def make_tiles!
-      if base_images = build_base_images!
+    def make_tiles! base_images = build_base_images
+      if base_images
         result = base_images.map do |base_image|
           FileUtils.mkdir_p(base_image[:image_path])
           { base_image[:image_path] => make_tiles_for_base_image!(base_image[:image], File.join(base_image[:image_path], options.filename_prefix)) }
         end
-        logger.info result
+        logger.verbose result
         logger.info 'Done'
         result
       else
@@ -54,9 +54,7 @@ module TileUp
       end
     end
 
-    private
-
-    def build_base_images!
+    def build_base_images
       logger.info 'Building base images'
 
       base_images = base_image_processing_tasks.map do |task|
@@ -75,6 +73,8 @@ module TileUp
       end
     end
 
+    private
+    
     def make_tiles_for_base_image!(base_image, filename_prefix)
       # find image width and height
       # then find out how many tiles we'll get out of
