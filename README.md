@@ -1,17 +1,16 @@
-Tile Up
-=======
+# Tile Up
 
 *Tile Up* is a ruby Ruby gem that splits a large image into a set of tiles to use with javascript mapping libraries such as [Leaflet.js](http://leafletjs.com) or [Modest Maps](http://modestmaps.com/). You can also use *Tile Up* to make tiles for `CATiledLayer` (or anything else really...).
 
-Installation
-------------
+[![Build Status](https://travis-ci.org/moiristo/tileup.svg?branch=master)](https://travis-ci.org/moiristo/tileup)
+
+## Installation
 
 `gem install tileup`
 
-`tileup` requires `rmagick` for image manipulation, which depends on `imagemagick`. `imagemagick` is avaliable through `homebrew`.
+`tileup` requires `rmagick` or `mini_magick` for image manipulation, which depends on `imagemagick`. `imagemagick` is avaliable through `homebrew`.
 
-Usage
------
+## Usage
 
 ### Basics
 
@@ -42,7 +41,7 @@ tileup --in really_huge_image.png --auto-zoom 4 \
        --output-dir map_tiles
 ```
 
-`--auto-zoom 4` means, make 4 levesl of zoom, starting from `really_huge_image.png` at zoom level 20, then scale that down for 19, etc.
+`--auto-zoom 4` means, make 4 levels of zoom, starting from `really_huge_image.png` at zoom level 20, then scale that down for 19, etc.
 
 You should see something like:
 
@@ -59,12 +58,11 @@ map_tiles/19/map_tile_0_2.png
 *(where `20` is zoom level 20, the largest zoom, `19` is half the size of `20`, `18` is half the size of `19`, …)*
 
 
-### Getting help
+## Getting help
 
 You can get help by running `tileup -h`.
 
-Contributing
-------------
+### Contributing
 
 Fixes and patches welcome, to contribute:
 

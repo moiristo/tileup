@@ -6,19 +6,27 @@ require 'tileup/version'
 Gem::Specification.new do |spec|
   spec.name        = 'tileup'
   spec.version     = TileUp::VERSION
-  spec.date        = Date.today.to_s
-  spec.summary     = "Turn an image into an X,Y tile set for use with JS mapping libraries"
-  spec.description = spec.summary
-  spec.authors     = ["Oliver Marriott"]
+  spec.authors     = ['Oliver Marriott']
   spec.email       = 'hello@omarriott.com'
-  spec.homepage    = 'http://github.com/rktjmp/tileup'
-  spec.license     = "MIT"
-  spec.files         = `git ls-files`.split($/)
-  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
-  spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
-  spec.require_paths = ["lib"]
-  spec.add_runtime_dependency "rmagick", ["~> 2.15"]
 
-  spec.add_development_dependency "bundler", "~> 1.10"
-  spec.add_development_dependency "rake", "~> 10.4"
+  spec.summary     = 'Turn an image into an X,Y tile set for use with JS mapping libraries'
+  spec.description = spec.summary
+  spec.homepage    = 'http://github.com/rktjmp/tileup'
+  spec.license     = 'MIT'
+
+  spec.files         = `git ls-files -z`.split("\x0").reject do |f|
+    f.match(%r{^test/})
+  end
+
+  spec.bindir        = 'bin'
+  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  spec.require_paths = ['lib']
+
+  spec.add_development_dependency 'bundler', '~> 1.13'
+  spec.add_development_dependency 'rake', '~> 10.0'
+  spec.add_development_dependency 'minitest', '~> 5.10'
+  spec.add_development_dependency 'pry'
+
+  spec.add_development_dependency 'rmagick', '~> 2.16'
+  spec.add_development_dependency 'mini_magick', '~> 4.7'
 end

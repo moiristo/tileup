@@ -1,20 +1,27 @@
-require 'logger'
 require 'ostruct'
+require 'logger'
 
 module TileUp
 
   # Base logger class, subclass this, do not use directly.
-  class TileUpLogger
+  class Logger
+
+    def self.build type, level, options
+      case type
+      when 'none' then TileUp::Loggers::None.new(level, options)
+      else TileUp::Loggers::Console.new(level, options)
+      end
+    end
 
     def self.sym_to_severity(sym)
       severities =  {
-        :debug   => Logger::DEBUG,
-        :info    => Logger::INFO,
-        :warn    => Logger::WARN,
-        :error   => Logger::ERROR,
-        :fatal   => Logger::FATAL
+        :debug   => ::Logger::DEBUG,
+        :info    => ::Logger::INFO,
+        :warn    => ::Logger::WARN,
+        :error   => ::Logger::ERROR,
+        :fatal   => ::Logger::FATAL
       }
-      severity = severities[sym] || Logger::UNKNOWN
+      severity = severities[sym] || ::Logger::UNKNOWN
     end
 
     # create logger set to given level
@@ -33,7 +40,7 @@ module TileUp
     end
 
     def level=(severity)
-      logger.level = TileUpLogger.sym_to_severity(severity)
+      logger.level = Logger.sym_to_severity(severity)
     end
 
     # log an error message
@@ -60,7 +67,7 @@ module TileUp
 
     # add message to log
     def add(severity, message)
-      severity = TileUpLogger.sym_to_severity(severity)
+      severity = Logger.sym_to_severity(severity)
       logger.add(severity, message)
     end
 
@@ -74,6 +81,8 @@ module TileUp
       @logger ||= create_logger
     end
 
+  private
+
     # subclasses should overwrite this method, creating what ever
     # logger they want to
     def create_logger
@@ -82,15 +91,4 @@ module TileUp
 
   end
 
-  # Log to console logger
-  class ConsoleLogger < TileUpLogger
-    private
-    def create_logger
-      @logger = Logger.new(STDOUT)
-      @logger.formatter = Proc.new do |sev, time, prg, msg|
-        "#{time.strftime('%H:%M:%S').to_s} => #{msg}\n"
-      end
-      @logger
-    end
-  end
 end
