@@ -10,7 +10,7 @@ OptionParser.new do |o|
   o.on('--prefix=map_tile', "Prefix to append to tile files, e.g. --prefix=my_tile => my_tile_[XN]_[YN].png.") { |prefix| options[:filename_prefix] = prefix }
   o.on('--tile-width=256', "Tile width, should normally equal tile height.") { |width| options[:tile_width] = width }
   o.on('--tile-height=256', "Tile height, should normally equal tile width.") { |height| options[:tile_height] = height }
-  o.on('--auto-zoom=', Integer, "Automatically scale input image N times, must be a number."){ |zooms| options[:auto_zoom_levels] = zooms }
+  o.on('--auto-zoom=auto', "Automatically scale input image N times when given a number. When 'auto' is specified, the auto zoom level is automatically determined"){ |zoom_level| options[:auto_zoom_level] = zoom_level }
   o.on('--output-dir=', "Output directory (will be created if it doesn't exist).") { |output_dir| options[:output_dir] = output_dir }
   o.on('--processor=rmagick', "Image processor, should be 'rmagick' or 'mini_magick'") { |processor| options[:processor] = processor }
   o.on('--logger=console', "Sets logger, should be 'console' or 'none'") { |logger| options[:logger] = logger }
