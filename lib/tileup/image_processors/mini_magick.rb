@@ -2,7 +2,10 @@ module TileUp
   module ImageProcessors
     class MiniMagick < TileUp::ImageProcessor
 
-      require 'mini_magick'
+      def initialize logger
+        require 'mini_magick'
+        super(logger)
+      end
 
       def width image
         image.width
