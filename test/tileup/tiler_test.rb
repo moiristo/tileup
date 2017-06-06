@@ -87,6 +87,11 @@ class TilerTest < Minitest::Test
     assert_equal 2, tiler.options.auto_zoom_level
   end
 
+  def test_it_accepts_a_logger_object_as_logger
+    tiler = create_tiler('map.jpg', logger: TileUp::Loggers::None::NullLogger.new)
+    assert tiler.logger.is_a?(TileUp::Logger)
+  end
+
 private
 
   def processors

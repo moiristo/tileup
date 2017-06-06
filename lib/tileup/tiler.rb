@@ -23,7 +23,7 @@ module TileUp
 
     def initialize image_filename, options = {}
       self.options = options = OpenStruct.new(DEFAULT_OPTIONS.merge(options))
-      self.logger = TileUp::Logger.build(options.logger, :info, {verbose: options.verbose})
+      self.logger = TileUp::Logger.build(options.logger, :info, verbose: options.verbose)
       self.image_processor = TileUp::ImageProcessor.build(options.processor, logger)
       self.image = image_processor.open(image_filename)
       self.extension = image_filename.split(".").last
