@@ -4,10 +4,10 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'tileup/version'
 
 Gem::Specification.new do |spec|
-  spec.name        = 'tileup'
+  spec.name        = 'moiristo-tileup'
   spec.version     = TileUp::VERSION
-  spec.authors     = ['Oliver Marriott']
-  spec.email       = 'hello@omarriott.com'
+  spec.authors     = ['Reinier de Lange']
+  spec.email       = 'rein@bookingexperts.nl'
 
   spec.summary     = 'Turn an image into an X,Y tile set for use with JS mapping libraries'
   spec.description = spec.summary
