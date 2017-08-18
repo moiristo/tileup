@@ -4,9 +4,11 @@
 
 [![Build Status](https://travis-ci.org/moiristo/tileup.svg?branch=master)](https://travis-ci.org/moiristo/tileup)
 
+*Note* This is not the official version of tileup. Since the offical version was poorly maintained, I decided to create my own version instead.
+
 ## Installation
 
-`gem install tileup`
+`gem install moiristo-tileup`
 
 `tileup` requires `rmagick` or `mini_magick` for image manipulation, which depends on `imagemagick`. `imagemagick` is avaliable through `homebrew`.
 
@@ -30,11 +32,32 @@ image_tiles/my_tiles_0_2.png
 ...
 ```
 
+### Using `Tiler` directly
+
+You can also call `Tiler` directly from your application code:
+
+```
+  tiler = TileUp::Tiler.new('huge_image.png', output_dir: 'image_tiles', processor: 'mini_magick', auto_zoom_level: 'auto', logger: 'none')
+
+  # Metadata
+  tiler.recommended_auto_zoom_level # Yields the recommended zoom level
+  tiler.image_processor.width(tiler.image) # Get the image width of 'huge_image.png' using the specified image processor
+  tiler.image_processor.height(tiler.image) # Get the image height of 'huge_image.png' using the specified image processor
+
+  # Tile generation
+  tiler.make_tiles!
+```
+
 ### Auto zooming
 
 `tileup` can also scale your image for a number of zoom levels (max 20 levels). This is done by *scaling down* the original image, so make sure its pretty big.
 
-*(Auto zooming is an experimental hack, it should work fine for smaller increments, but may be unreliable at higher levels. E.g. `--auto-zoom 4` should work fine, `--auto-zoom 20` might not work so well.)*
+```
+tileup --in really_huge_image.png --auto-zoom auto \
+       --output-dir map_tiles
+```
+
+`--auto-zoom auto` means that `tileup` will autoamtically try to determine the best auto zoom level. The level will be based on the image size and the tile dimensions specified.
 
 ```
 tileup --in really_huge_image.png --auto-zoom 4 \
