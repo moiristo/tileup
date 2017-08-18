@@ -8,7 +8,10 @@
 
 ## Installation
 
-`gem install moiristo-tileup`
+* Manual:
+  * `gem install moiristo-tileup`
+* Gemfile:
+  * `gem 'moiristo-tileup', require: 'tileup'`
 
 `tileup` requires `rmagick` or `mini_magick` for image manipulation, which depends on `imagemagick`. `imagemagick` is avaliable through `homebrew`.
 
