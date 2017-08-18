@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    tileup (0.2.0)
+    moiristo-tileup (1.0.0)
 
 GEM
   remote: https://rubygems.org/
@@ -25,10 +25,10 @@ DEPENDENCIES
   bundler (~> 1.13)
   mini_magick (~> 4.7)
   minitest (~> 5.10)
+  moiristo-tileup!
   pry
   rake (~> 10.0)
   rmagick (~> 2.16)
-  tileup!
 
 BUNDLED WITH
-   1.13.6
+   1.15.3

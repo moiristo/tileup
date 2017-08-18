@@ -6,9 +6,10 @@ module TileUp
   # Base logger class, subclass this, do not use directly.
   class Logger
 
-    def self.build type, level, options
+    def self.build type, level, options = {}
       case type
       when 'none' then TileUp::Loggers::None.new(level, options)
+      when ::Logger then TileUp::Logger.new(level, options.merge(logger: type))
       else TileUp::Loggers::Console.new(level, options)
       end
     end
@@ -27,11 +28,10 @@ module TileUp
     # create logger set to given level
     # where level is a symbol (:debug, :info, :warn, :error, :fatal)
     # options may specifiy verbose, which will log more info messages
-    def initialize(level, options)
+    def initialize(level, options = {})
       @severity = level
-      default_options = {
-        verbose: false
-      }
+      @logger = options[:logger] if options[:logger]
+      default_options = { verbose: false }
       @options = OpenStruct.new(default_options.merge(options))
     end
 

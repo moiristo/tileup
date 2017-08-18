@@ -3,11 +3,11 @@ require 'test_helper'
 class TilerTest < Minitest::Test
 
   def test_it_forces_a_min_zoom_level
-    assert_nil create_tiler('map.jpg', auto_zoom_levels: -1).options.auto_zoom_levels
+    assert_nil create_tiler('map.jpg', auto_zoom_level: -1).options.auto_zoom_level
   end
 
   def test_it_forces_a_max_zoom_level
-    assert_equal 20, create_tiler('map.jpg', auto_zoom_levels: 21).options.auto_zoom_levels
+    assert_equal 20, create_tiler('map.jpg', auto_zoom_level: 21).options.auto_zoom_level
   end
 
   def test_it_sets_the_file_extension
@@ -25,7 +25,7 @@ class TilerTest < Minitest::Test
 
   def test_it_makes_tiles_for_zoom_levels
     processors.each do |processor|
-      tiles = create_tiler('map.jpg', auto_zoom_levels: 2, processor: processor).make_tiles!
+      tiles = create_tiler('map.jpg', auto_zoom_level: 2, processor: processor).make_tiles!
 
       assert tiles.any?, "no tiles found for #{processor}"
       assert tiles[0][File.join(TEST_ROOT, 'out/2')].any?
@@ -35,7 +35,7 @@ class TilerTest < Minitest::Test
   
   def test_it_generates_base_images
     processors.each do |processor|
-      tiler = create_tiler('map.jpg', auto_zoom_levels: 4, processor: processor)
+      tiler = create_tiler('map.jpg', auto_zoom_level: 4, processor: processor)
       base_images = tiler.build_base_images
       
       assert_equal 4, base_images.size
@@ -63,6 +63,33 @@ class TilerTest < Minitest::Test
   def test_it_ensures_tile_dimensions_are_ints
     options = create_tiler('map.jpg', tile_width: '128', tile_height: '128').options
     assert_equal [128, 128], [options.tile_width, options.tile_height]
+  end
+
+  def test_it_determines_the_recommended_auto_zoom_level
+    tiler = create_tiler('map.jpg')
+    assert_equal 2, tiler.recommended_auto_zoom_level
+
+    tiler.options[:tile_width] = 64
+    tiler.options[:tile_height] = 64
+    assert_equal 4, tiler.recommended_auto_zoom_level
+
+    tiler.options[:tile_width] = 256
+    tiler.options[:tile_height] = 64
+    assert_equal 2, tiler.recommended_auto_zoom_level
+
+    tiler.options[:tile_width] = 64
+    tiler.options[:tile_height] = 256
+    assert_equal 2, tiler.recommended_auto_zoom_level
+  end
+
+  def test_it_sets_the_recommended_auto_zoom_level
+    tiler = create_tiler('map.jpg', auto_zoom_level: 'auto')
+    assert_equal 2, tiler.options.auto_zoom_level
+  end
+
+  def test_it_accepts_a_logger_object_as_logger
+    tiler = create_tiler('map.jpg', logger: TileUp::Loggers::None::NullLogger.new)
+    assert tiler.logger.is_a?(TileUp::Logger)
   end
 
 private

@@ -8,7 +8,7 @@ module TileUp
 
     DEFAULT_OPTIONS = {
       processor: 'rmagick', # or 'mini_magick'
-      auto_zoom_levels: nil,
+      auto_zoom_level: nil,
       tile_width: 256,
       tile_height: 256,
       filename_prefix: 'map_tile',
@@ -23,19 +23,25 @@ module TileUp
 
     def initialize image_filename, options = {}
       self.options = options = OpenStruct.new(DEFAULT_OPTIONS.merge(options))
-      self.logger = TileUp::Logger.build(options.logger, :info, {verbose: options.verbose})
+      self.logger = TileUp::Logger.build(options.logger, :info, verbose: options.verbose)
       self.image_processor = TileUp::ImageProcessor.build(options.processor, logger)
       self.image = image_processor.open(image_filename)
       self.extension = image_filename.split(".").last
 
       %w(tile_width tile_height).each{|dimension| options[dimension] = options[dimension].to_i }
 
-      if options.auto_zoom_levels
-        if options.auto_zoom_levels > 20
+      if options.auto_zoom_level
+        if options.auto_zoom_level == 'auto'
+          options.auto_zoom_level = recommended_auto_zoom_level
+        else
+          options.auto_zoom_level = options.auto_zoom_level.to_i
+        end
+
+        if options.auto_zoom_level > 20
           logger.warn 'Warning: auto zoom levels hard limited to 20.'
-          options.auto_zoom_levels = 20
-        elsif options.auto_zoom_levels <= 0
-          options.auto_zoom_levels = nil
+          options.auto_zoom_level = 20
+        elsif options.auto_zoom_level <= 0
+          options.auto_zoom_level = nil
         end
       end
     end
@@ -73,6 +79,17 @@ module TileUp
       end
     end
 
+    def recommended_auto_zoom_level
+      zoom_level = (1..20).detect do |zoom_level|
+        scale = (1.to_f / 2 ** (zoom_level - 1))
+
+        image_processor.width(image) * scale < options.tile_width ||
+        image_processor.height(image) * scale < options.tile_height
+      end
+
+      [1, zoom_level.to_i - 1].max
+    end
+
     private
     
     def make_tiles_for_base_image!(base_image, filename_prefix)
@@ -93,11 +110,11 @@ module TileUp
     end
 
     def base_image_processing_tasks
-      if options.auto_zoom_levels.nil?
+      if options.auto_zoom_level.nil?
         [{ output_dir: options.output_dir, scale: 1.0 }]
       else
         current_scale = 1.0
-        (1..options.auto_zoom_levels).to_a.reverse.map do |zoom_level|
+        (1..options.auto_zoom_level).to_a.reverse.map do |zoom_level|
           task = {
             output_dir: File.join(options.output_dir, zoom_level.to_s),
             scale: current_scale

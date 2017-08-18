@@ -2,7 +2,10 @@ module TileUp
   module ImageProcessors
     class RMagick < TileUp::ImageProcessor
 
-      require 'rmagick'
+      def initialize logger
+        require 'rmagick'
+        super(logger)
+      end
 
       def width image
         image.columns
