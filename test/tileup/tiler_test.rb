@@ -11,7 +11,12 @@ class TilerTest < Minitest::Test
   end
 
   def test_it_sets_the_file_extension
-    assert_equal 'jpg', create_tiler('map.jpg').extension
+    assert_equal '.jpg', create_tiler('map.jpg').extension
+  end
+
+  def test_it_sets_the_file_extension_of_remote_files
+    TileUp::ImageProcessors::RMagick.any_instance.expects(:open).returns(true)
+    assert_equal '.png', TileUp::Tiler.new('https://example.org/map.png?param=1&param=1').extension
   end
 
   def test_it_makes_tiles

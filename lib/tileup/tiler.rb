@@ -26,7 +26,12 @@ module TileUp
       self.logger = TileUp::Logger.build(options.logger, :info, verbose: options.verbose)
       self.image_processor = TileUp::ImageProcessor.build(options.processor, logger)
       self.image = image_processor.open(image_filename)
-      self.extension = image_filename.split(".").last
+
+      self.extension = if File.exist?(image_filename)
+        File.extname(image_filename)
+      else
+        File.extname(URI(image_filename).path)
+      end
 
       %w(tile_width tile_height).each{|dimension| options[dimension] = options[dimension].to_i }
 
@@ -102,7 +107,7 @@ module TileUp
       logger.info "Tiling image into columns: #{num_columns}, rows: #{num_rows}"
 
       crops_for(num_columns, num_rows).map do |crop|
-        filename = "#{filename_prefix}_#{crop[:column]}_#{crop[:row]}.#{extension}"
+        filename = "#{filename_prefix}_#{crop[:column]}_#{crop[:row]}#{extension}"
         is_edge = (crop[:row] == num_rows - 1 || crop[:column] == num_columns - 1)
         image_processor.crop_and_save(base_image, crop, filename: filename, extend_crop: options.extend_incomplete_tiles && is_edge, extend_color: options.extend_color)
         filename

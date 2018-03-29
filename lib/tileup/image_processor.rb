@@ -57,7 +57,7 @@ module TileUp
       raise NotImplementedError
     end
 
-    def crop_image image, crop, extend_crop: false, extend_color: 'none'
+    def crop_and_save_image image, crop, filename:, extend_crop: false, extend_color: 'none'
       raise NotImplementedError
     end
 
