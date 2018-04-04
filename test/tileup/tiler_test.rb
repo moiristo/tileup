@@ -28,6 +28,15 @@ class TilerTest < Minitest::Test
     end
   end
 
+  def test_it_returns_false_when_base_images_cannot_be_created
+    TileUp::ImageProcessors::RMagick.any_instance.expects(:scale_image).returns(false)
+    TileUp::ImageProcessors::MiniMagick.any_instance.expects(:scale_image).returns(false)
+
+    processors.each do |processor|
+      refute create_tiler('map.jpg', auto_zoom_level: 2, processor: processor).make_tiles!
+    end
+  end
+
   def test_it_makes_tiles_for_zoom_levels
     processors.each do |processor|
       tiles = create_tiler('map.jpg', auto_zoom_level: 2, processor: processor).make_tiles!

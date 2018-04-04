@@ -75,7 +75,7 @@ module TileUp
         }
       end
 
-      if base_images
+      if base_images.all?{|base_image| base_image[:image] }
         logger.info "Building base images finished."
         base_images
       else

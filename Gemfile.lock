@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    moiristo-tileup (1.0.1)
+    moiristo-tileup (1.0.2)
 
 GEM
   remote: https://rubygems.org/
