@@ -1,4 +1,8 @@
-Copyright (c) 2017 Reinier de Lange
+Copyright for portions of project "moiristo-tileup" are held by 
+Oliver Marriott, 2013 as part of project "tileup".
+
+All other copyright for project "moiristo-tileup" are held by 
+Reinier de Lange, 2017.
 
 MIT License
 
